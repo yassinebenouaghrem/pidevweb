@@ -1,0 +1,43 @@
+{% extends 'basebackthe.html.twig' %}
+
+{% block title %}Reco index{% endblock %}
+
+{% block container %}
+    <h1>Gestion de recommandation</h1>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Ecrivain</th>
+                <th>Image</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reco in recos %}
+            <tr>
+                <td>{{ reco.getId }}</td>
+                <td>{{ reco.getTitre }}</td>
+                <td>{{ reco.getDescription }}</td>
+                <td>{{ reco.getEcrivain }}</td>
+                <td> <img width="275" height="350" src="{{ asset('images/')~ reco.image }}"  ></td>
+                <td>{{ reco.getType }}</td>
+                <td>
+                    <a  class="btn btn-success btn-circle btn-lg" href="{{ path('reco_edit', {'id': reco.getId()}) }}"><i class="fas fa-edit"></i></a>
+                    <a class="btn btn-danger btn-circle btn-lg"   href="{{ path('reco_delete', {'id': reco.getId()}) }}"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('reco_new') }}">Create new</a>
+{% endblock %}
