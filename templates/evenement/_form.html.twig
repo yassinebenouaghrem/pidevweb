@@ -1,0 +1,119 @@
+{{ form_start(form,{'attr':{'novalidate': 'novalidate'}}) }}
+<!--row-->
+
+
+
+
+
+{% block body %}
+
+
+<link rel="stylesheet" href="{{ asset("back/js/datepicker.css") }}" >
+
+    <script src="{{ asset("back/js/datepicker.js") }}"></script>
+<script>
+    jQuery(document).ready(function() {
+        $('#datetimepicker').datepicker();
+    });
+</script>
+
+
+    <div class="row">
+
+ <div class="col">
+        <fieldset >
+
+            <div class="form-group">
+                {{ form_label(form.idOrganisateur,"Id Organisateur") }}
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.idOrganisateur, {'attr':{'class':'form-control '}}) }}
+                {{ form_errors (form.idOrganisateur) }}
+            </div>
+
+    <div class="form-group">
+        {{ form_label(form.type,"Type") }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.type, {'attr':{'class':'form-control '}}) }}
+        {{ form_errors (form.type) }}
+
+    </div>
+    <div class="form-group">
+        {{ form_label(form.titre,"Titre") }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.titre, {'attr':{'class':'form-control '}}) }}
+        {{ form_errors (form.titre) }}
+
+    </div>
+            <div class="form-group">
+                {{ form_label(form.lieu,"Lieu") }}
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.lieu, {'attr':{'class':'form-control'}}) }}
+                {{ form_errors (form.lieu) }}
+
+            </div>
+            <div class="form-group ">
+                {{ form_label(form.dateEvent , 'Date Event') }}
+                <div class="row m-2">
+                    {{form_widget(form.dateEvent , {'attr':{'class':'form-control'},'id':'datetimepicker'  }) }}
+                    {{ form_errors (form.dateEvent) }}
+
+                </div>
+
+            </div>
+
+      </fieldset> </div>
+
+      <div class="col">
+        <fieldset >
+
+            <div class="form-group">
+                {{ form_label(form.description,"Description ") }}
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.description, {'attr':{'class':'form-control '}}) }}
+                {{ form_errors (form.description) }}
+
+            </div>
+
+
+        <div class="form-group">
+        {{ form_label(form.image,"Image") }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.image, {'attr':{'class':'form-control'}}) }}
+        {{ form_errors (form.image) }}
+
+    </div>
+    <div class="form-group">
+        {{ form_label(form.tarif,"Tarif") }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.tarif, {'attr':{'class':'form-control '}}) }}
+        {{ form_errors (form.tarif) }}
+
+    </div>
+    <div class="form-group">
+        {{ form_label(form.capacite,"capacite") }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.capacite, {'attr':{'class':'form-control '}}) }}
+        {{ form_errors (form.capacite) }}
+
+    </div>
+
+            <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+
+        </fieldset>
+
+          </div>
+              {{ form_end(form) }}
+
+    </div>
+
+
+
+{% endblock %}

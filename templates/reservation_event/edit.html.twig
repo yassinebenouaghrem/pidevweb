@@ -1,0 +1,187 @@
+
+
+{% extends 'baseFront.html.twig' %}
+
+{% block body %}
+
+
+    <script src="{{ asset("Front/jquery-3.5.0.min.js") }}"></script>
+
+
+    <script>
+
+        function verifierNbPlace()
+        {
+
+        }
+
+
+        $(document).ready(function(){
+            $("#price, #qty").keyup(function(){
+
+                var total=0;
+                var x = Number($("#price").val());
+                var y = Number($("#qty").val());
+
+
+                var total=x * y;
+
+                $('#total').val(total);
+
+            });
+        });
+        var placeR = document.getElementById("PlaceRest").value;
+        var placeC = document.getElementById("qty").value;
+        var a=0;
+        var b=1;
+        function test(){
+            if(b>a)
+                alert("Réservation effectué avec succés");
+
+        }
+
+        function verifierNbPlace()
+        {
+if(placeC>placeR)
+{
+    alert("Pas assez de place");
+
+}
+
+        }
+    </script>
+
+    <section class="ftco-section ftco-no-pt ftco-no-pb ftco-services-2 bg-light">
+        <div class="container">
+            <div class="row d-flex">
+                <div class="col-md-7 py-5">
+
+                    <div class="row">
+
+                        <h2 class="mb-3" style="text-transform: uppercase;">{{ evenement.titre }}</h2>
+                        <p>{{ evenement.description }}</p>
+                        <p>
+                            <img src="{{ asset('imgEvent/')~ evenement.image }}" alt="" class="img-fluid" style=" display: block;
+  margin-left: 20%;
+  margin-right: auto;
+  width: 100%;
+  " >
+
+                        </p>
+                        <dl class="row">
+                            <dd class="col-sm-9">
+                            <dt class="col-sm-4">Lieu de l'événement :</dt>
+                            <dd class="col-sm-8">{{ evenement.lieu }}</dd>
+                            </dd>
+
+                            <dd class="col-sm-9">
+                            <dt class="col-sm-4">Date de l'événement :</dt>
+                            <dd class="col-sm-8" >{{ evenement.dateEvent ? evenement.dateEvent|date('d-m-Y') : '' }}</dd>
+                            </dd>
+
+                            <dd class="col-sm-9">
+                            <dt class="col-sm-4">Tarif par personne : </dt>
+                            <dd class="col-sm-8">{{ evenement.tarif }} dt
+                                <input type="hidden" value="{{evenement.tarif}}" id="price" >
+                            </dd>
+                            <dt class="col-sm-4" style="color: #940000;">Nombre de place Restante : </dt>
+                            <dd class="col-sm-8" style="color: #940000;">{{ evenement.capacite-evenement.nbReservation}} place(s) restante(s) </dd>
+                            <input type="hidden" value="{{ evenement.capacite-evenement.nbReservation}}" id="PlaceRest" >
+
+                            </dd>
+
+
+
+                        </dl>
+
+
+                        <div class="tag-widget post-tag-container mb-5 mt-5">
+                            <div class="tagcloud">
+                                <a href="#" class="tag-cloud-link">{{ evenement.type }}</a>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <h3>Organisateur de l'événement :</h3>
+                    <div class="about-author d-flex p-4 bg-light">
+                        <div class="bio mr-5">
+                            <img src="{{ asset('Front/images/person_1.jpg')}}" alt="Image placeholder" class="img-fluid mb-4">
+                        </div>
+                        <div class="desc">
+                            <h3>George Washington</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+                <div class="col-md-5 d-flex">
+                    <div class="appointment-wrap bg-white p-4 p-md-5 d-flex ">
+
+
+
+                        {{ form_start(form,{'attr':{'novalidate': 'novalidate'}}) }}
+
+                        <div class="appointment-form ftco-animate">
+                            <h3 style="text-align: center">Réserver pour vous et vos amis   </h3>
+
+
+                            {{ form_start(form)}}
+
+                            <div class="">
+
+
+                                <div class="form-group ">
+                                    {{ form_label((form) .idClient,"Id Client") }}
+                                    {{ form_errors (form.idClient) }}
+
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget((form) .idClient, {'attr':{'class':'form-control '}}) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label((form) .nbPlace,"Nombre de place") }}
+                                </div>
+                                <div class="form-group">
+
+                                    {{ form_widget((form).nbPlace, {'id':'qty','attr':{'class':'form-control '}}) }}
+                                    {{ form_errors (form.nbPlace) }}
+
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label((form) .modePaiement,"Mode de Paiement") }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget((form) .modePaiement, {'attr':{'class':'form-control '}}) }}
+                                </div>
+                                <div class="form-group">
+                                    Total
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="total" disabled class="form-control">
+                                </div>
+
+                                <button class="btn btn-secondary py-3 px-4" onclick="verifierNbPlace();" >{{ button_label|default('Modifier ma réservation') }}</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </div>
+    </section>
+
+    {{ form_end(form) }}
+
+
+{% endblock %}
+
