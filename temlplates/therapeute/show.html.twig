@@ -1,0 +1,59 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Therapeute{% endblock %}
+
+{% block container %}
+    <h1>Therapeute</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ therapeute.getId }}</td>
+            </tr>
+            <tr>
+                <th>Cin</th>
+                <td>{{ therapeute.getCin }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ therapeute.getEmail }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ therapeute.getNom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ therapeute.getPrenom }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ therapeute.getPassword }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ therapeute.getType }}</td>
+            </tr>
+
+            <tr>
+                <th>Numtel</th>
+                <td>{{ therapeute.getNumtel }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ therapeute.adresse }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ therapeute.getImage }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('therapeute_index') }}">back to list</a>
+
+    <a href="{{ path('therapeute_edit', {'id': therapeute.getId}) }}">edit</a>
+
+    {{ include('therapeute/_delete_form.html.twig') }}
+{% endblock %}
