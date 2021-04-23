@@ -13,7 +13,9 @@ use Symfony\Component\HttpFoundation\File\File;
 
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Knp\Component\Pager\PaginatorInterface;
 /**
  * @Route("/produits")
  */
@@ -22,24 +24,85 @@ class ProduitsController extends AbstractController
     /**
      * @Route("/", name="produits_index", methods={"GET"})
      */
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $produits = $this->getDoctrine()
+        $donnees = $this->getDoctrine()
             ->getRepository(Produits::class)
             ->findAll();
+
+        $produits = $paginator->paginate(
+            $donnees, // Requête contenant les données à paginer (ici nos articles)
+            $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
+            2 // Nombre de résultats par page
+        );
+
+
+
 
         return $this->render('produits/index.html.twig', [
             'produits' => $produits,
         ]);
     }
+
     /**
-     * @Route("/afficherproduits", name="afficherproduits_index", methods={"GET"})
+     * @Route("/listp", name="produits_list", methods={"GET"})
      */
-    public function afficherproduits(): Response
+    public function listp(): Response
     {
+
+
+        // Configure Dompdf according to your needs
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+
         $produits = $this->getDoctrine()
             ->getRepository(Produits::class)
             ->findAll();
+
+
+
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('produits/listp.html.twig', [
+            'produits' => $produits,
+        ]);
+
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("mypdf.".date('m-d-Y_h;ia').".pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+
+
+
+
+    /**
+     * @Route("/afficherproduits", name="afficherproduits_index", methods={"GET"})
+     */
+    public function afficherproduits(Request $request, PaginatorInterface $paginator): Response
+    {
+        $donnees = $this->getDoctrine()
+            ->getRepository(Produits::class)
+            ->findAll();
+        $produits = $paginator->paginate(
+            $donnees, // Requête contenant les données à paginer (ici nos articles)
+            $request->query->getInt(
+                'page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
+            3 // Nombre de résultats par page
+        );
+
         $promotions = $this->getDoctrine()
             ->getRepository(Promotion::class)
             ->findAll();

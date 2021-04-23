@@ -1,0 +1,58 @@
+{% extends 'baseFront.html.twig' %}
+
+{% block row_container %}
+    <div class="col-md-12 mb-0"><a href="index.html.twig">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Store</strong></div>
+{% endblock %}
+{% block container %}
+
+
+    <div class="row">
+        {% for produit in produits %}
+
+        <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
+
+
+
+            <a href=""> <img src="{{ asset('Front/images/')~produit.getImage()}}" width=150 height=250 alt="Image"></a>
+
+            <h3 class="text-dark"><a>{{produit.Nom}}</a></h3>
+
+            <p >  {{produit.Prix}}$</p>
+
+            {% for promotions in promotions %}
+
+                {% if (promotions.idP == produit.idProduit) and (promotions.dateF > date())   %}
+                    {% set difference = (promotions.dateF).diff(date()) %}
+                    {% set leftDays = difference.days %}
+
+                    <span class="onsale">Encore {{leftDays}} jours </span>
+
+            <p class="price"><del>{{produit.Prix}}$</del> : promotion de {{promotions.valP}}%  <br> nouveau prix : {{(produit.Prix/100)*promotions.valP}}$ <br/> </p>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+
+
+
+    </div>
+
+
+    <div class="row mt-5">
+        <div class="col-md-12 text-center">
+            <div class="site-block-27">
+                <ul>
+                    <li><a href="#">&lt;</a></li>
+                    <li class="active"><a href="http://localhost/zenlife/public/index.php/produits/afficherproduits?page=1#">1</a></li>
+                    <li class="active"><a href="http://localhost/zenlife/public/index.php/produits/afficherproduits?page=2#">2</a></li>
+                    <li class="active"><a href="http://localhost/zenlife/public/index.php/produits/afficherproduits?page=3#">3</a></li>
+                    <li class="active"><a href="http://localhost/zenlife/public/index.php/produits/afficherproduits?page=4#">4</a></li>
+                    <li class="active"><a href="#">5</a></li>
+                    <li ><a href="#">&gt;</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Reco{% endblock %}
+
+{% block body %}
+    <h1>Edit Reco</h1>
+
+    {{ include('reco/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('reco_index') }}">back to list</a>
+
+    {{ include('reco/_delete_form.html.twig') }}
+{% endblock %}
