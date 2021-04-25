@@ -96,4 +96,12 @@ class CommandesController extends AbstractController
 
         return $this->redirectToRoute('commandes_index');
     }
+
+
+    public function Ajouter_commande($commande)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($commande);
+        $entityManager->flush();
+    }
 }

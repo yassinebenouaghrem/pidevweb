@@ -93,4 +93,25 @@ class PaniersController extends AbstractController
 
         return $this->redirectToRoute('paniers_index');
     }
+
+
+    /**
+     * @Route("/stat", name="stat", methods={"GET","POST"})
+     */
+    public function stat(): Response
+    {
+
+
+        return $this->render('paniers/Statistique.html.twig');
+    }
+
+
+    public function Ajouter_panier($panier)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($panier);
+        $entityManager->flush();
+    }
+
+
 }
