@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+// Include Dompdf required namespaces
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 use App\Entity\Evenement;
 use App\Entity\Notifications;
 use App\Entity\ReservationEvent;
 use App\Form\ReservationEventType;
+use App\Repository\ReservationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +45,7 @@ class ReservationEventController extends AbstractController
             ->getRepository(Evenement::class)
             ->FindReservationEncours();
 
+
         $notification=$this->getDoctrine()
             ->getRepository(Notifications::class)
             ->createQueryBuilder('e')
@@ -49,11 +55,17 @@ class ReservationEventController extends AbstractController
             ->getQuery()
             ->execute();
 
+        $client = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->NomDuclient();
+
+
 
 
         return $this->render('reservation_event/reservationBack.html.twig', [
             'reservation_events' => $reservationEvents,
             'notification'=> $notification,
+            'client'=> $client,
 
         ]);
     }
@@ -247,4 +259,66 @@ $em1->flush();
         return $this->redirectToRoute('GererReservation_event_index');
     }
 
+
+    /**
+     * @Route("/{id}/facture", name="factureReservation", methods={"GET"})
+     */
+    public function factureReservation(Request $request): Response
+    {
+        $id = $request->get("id");
+
+        $reservationEvent= $this->getDoctrine()
+            ->getRepository(ReservationEvent::class)
+            ->createQueryBuilder('e')
+            ->where('e.id = :id')
+            ->setParameter('id',$id)
+            ->getQuery()
+            ->execute();
+
+
+
+        // Configure Dompdf according to your needs
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->setIsRemoteEnabled(true);
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+        $contxt = stream_context_create([
+            'ssl' => [
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+                'allow_self_signed'=> TRUE
+            ]
+        ]);
+        $dompdf->setHttpContext($contxt);
+
+
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('reservation_event/pdfReservationEvenement.html.twig', [
+            'title' => "Welcome to our PDF Test",
+            'reservation_events'=>$reservationEvent,
+        ]);
+
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (inline view)
+        $dompdf->stream("mypdf.pdf", [
+            "Attachment" => false
+        ]);
+
+
+
+
+
+
+
+
+    }
 }

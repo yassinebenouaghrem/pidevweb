@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 use App\Entity\Notifications;
+use App\Form\SearchType;
 use App\Repository\EvenementRepository;
 use App\Entity\Evenement;
 use App\Entity\ReservationEvent;
@@ -9,6 +10,8 @@ use App\Entity\FitreRecherche;
 use App\Form\FitreRechercheType;
 use App\Form\EvenementType;
 use App\Form\ReservationEventType;
+use App\Services\QrcodeService;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,45 +22,181 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
 
+
 /**
  * @Route("/evenement")
  */
 class EvenementController extends AbstractController
 {
+
+    /**
+     * @Route("/statistique", name="statistique", methods={"GET"})
+     */
+    public function stat(Request $request): Response
+    {
+        $statplusreserver = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->StatTypeEventleplusreserver();
+
+        $NomType = [];
+        $countType = [];
+
+        $evenementstat = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->StatTypeEventleplusreserver();
+        foreach ($evenementstat as $evenementstat) {
+            $countType[] = $evenementstat['reserv'];
+            $NomType[] = $evenementstat['type'];
+
+
+        }
+
+        $NomModeP= [];
+        $countModeP = [];
+
+        $modeP= $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->modePaiementleplusUtiliser();
+        foreach ($modeP as $modeP) {
+            $countModeP[] = $modeP['countM'];
+            $NomModeP[] = $modeP['modePaiement'];
+
+
+        }
+
+        $TitreEvent= [];
+        $nbREvent = [];
+
+        $EvolutionR= $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->StatEvolutionReservation();
+        foreach ($EvolutionR as $EvolutionR) {
+            $TitreEvent[] = $EvolutionR['titre'];
+            $nbREvent[] = $EvolutionR['reserve'];
+        }
+
+        $typeEtat= [];
+        $countEtat = [];
+
+        $StatEtat= $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->statEtatEvenement();
+        foreach ($StatEtat as $StatEtat) {
+            $typeEtat[] = $StatEtat['etat'];
+            $countEtat[] = $StatEtat['countEtat'];
+        }
+
+
+
+        $notification = $this->getDoctrine()
+            ->getRepository(Notifications::class)
+            ->createQueryBuilder('e')
+            ->where('e.etat like :etat')
+            ->setParameter('etat', 'non lu')
+            ->addOrderBy('e.id', 'desc')
+            ->getQuery()
+            ->execute();
+
+        $nbrNotif = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->CompterNbNotif();
+
+        $ProgressionEventEncours = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->statProgressionEvenement();
+
+        $RappelEvent = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->RappelEvent();
+
+        return $this->render('evenement/stats.html.twig', [
+            'NomType' => json_encode($NomType),
+            'countType' => json_encode($countType),
+            'evenementstat' => $evenementstat,
+            'notification' => $notification,
+            'nbrNotif' => $nbrNotif,
+            'NomModeP' => json_encode($NomModeP),
+            'countModeP' => json_encode($countModeP),
+            'modeP' => $modeP,
+          'TitreEvent'=>  json_encode($TitreEvent),
+       'nbREvent'=> json_encode($nbREvent),
+            'typeEtat'=>  json_encode($typeEtat),
+            'countEtat'=> json_encode($countEtat),
+            'ProgressionEventEncours' => $ProgressionEventEncours,
+            'RappelEvent'=>$RappelEvent
+
+        ]);
+    }
+
     /**
      * @Route("/", name="evenement_index", methods={"GET"})
      */
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $evenements = $this->getDoctrine()
+        $search = new FitreRecherche();
+
+        $form = $this->createForm(FitreRechercheType::class, $search);
+        $form->handleRequest($request);
+
+        $pagination = $this->getDoctrine()
             ->getRepository(Evenement::class)
-            ->AfficherEvenementencours();
+            ->AfficherEvenementencours($search);
+
+        $evenements = $paginator->paginate(
+            $pagination,
+            $request->query->getInt('page', 1), /*page number*/
+            5 /*limit per page*/
+        );
+
+
+        $statplusreserver = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->StatTypeEventleplusreserver();
+
+        $NomModeP= [];
+        $countModeP = [];
+
+        $modeP= $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->modePaiementleplusUtiliser();
+        foreach ($modeP as $modeP) {
+            $countModeP[] = $modeP['countM'];
+            $NomModeP[] = $modeP['modePaiement'];
+
+
+        }
 
         $event = $this->getDoctrine()
             ->getRepository(Evenement::class)
             ->changerEtatEvent();
 
-        $notification=$this->getDoctrine()
+        $notification = $this->getDoctrine()
             ->getRepository(Notifications::class)
             ->createQueryBuilder('e')
             ->where('e.etat like :etat')
-            ->setParameter('etat','non lu')
+            ->setParameter('etat', 'non lu')
             ->addOrderBy('e.id', 'desc')
             ->getQuery()
             ->execute();
 
-$nbrNotif=$this->getDoctrine()
-    ->getRepository(Evenement::class)
-    ->CompterNbNotif();
+        $nbrNotif = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->CompterNbNotif();
 
         return $this->render('evenement/index.html.twig', [
             'evenements' => $evenements,
             'event' => $event,
-            'notification'=> $notification,
-            'nbrNotif'=>$nbrNotif,
+            'notification' => $notification,
+            'nbrNotif' => $nbrNotif,
+            'form' => $form->createView(),
+            'NomModeP' => json_encode($NomModeP),
+            'countModeP' => json_encode($countModeP),
+            'modeP' => $modeP,
+
 
         ]);
     }
+
 
     /**
      * @Route("/evenementeffectue", name="evenementeffectue", methods={"GET"})
@@ -72,27 +211,28 @@ $nbrNotif=$this->getDoctrine()
             ->getRepository(Evenement::class)
             ->changerEtatEvent();
 
-        $notification=$this->getDoctrine()
+        $notification = $this->getDoctrine()
             ->getRepository(Notifications::class)
             ->createQueryBuilder('e')
             ->where('e.etat like :etat')
-            ->setParameter('etat','non lu')
+            ->setParameter('etat', 'non lu')
             ->addOrderBy('e.id', 'desc')
             ->getQuery()
             ->execute();
 
-        $nbrNotif=$this->getDoctrine()
+        $nbrNotif = $this->getDoctrine()
             ->getRepository(Evenement::class)
             ->CompterNbNotif();
 
         return $this->render('evenement/EvenementEffectueBack.html.twig', [
             'evenements' => $evenements,
             'event' => $event,
-            'notification'=> $notification,
-            'nbrNotif'=>$nbrNotif,
+            'notification' => $notification,
+            'nbrNotif' => $nbrNotif,
 
         ]);
     }
+
     /**
      * @Route("/mesreservationseffectue", name="mesreservationsEffectue_index", methods={"GET"})
      */
@@ -108,7 +248,7 @@ $nbrNotif=$this->getDoctrine()
 
         return $this->render('evenement/ReservationEffectueClient.html.twig', [
             'reservations' => $reservation,
-            'etatReservation'=>$etatReservations,
+            'etatReservation' => $etatReservations,
 
         ]);
     }
@@ -116,11 +256,17 @@ $nbrNotif=$this->getDoctrine()
     /**
      * @Route("/mesreservations", name="mesreservations_index", methods={"GET"})
      */
-    public function mesreservations(): Response
+    public function mesreservations(Request $request, PaginatorInterface $paginator): Response
     {
-        $reservation = $this->getDoctrine()
+        $pagination = $this->getDoctrine()
             ->getRepository(Evenement::class)
             ->FindReservationEncours();
+
+        $reservation = $paginator->paginate(
+            $pagination,
+            $request->query->getInt('page', 1), /*page number*/
+            6 /*limit per page*/
+        );
 
         $etatReservations = $this->getDoctrine()
             ->getRepository(Evenement::class)
@@ -128,7 +274,7 @@ $nbrNotif=$this->getDoctrine()
 
         return $this->render('evenement/GestionReservation.html.twig', [
             'reservations' => $reservation,
-            'etatReservation'=>$etatReservations,
+            'etatReservation' => $etatReservations,
 
         ]);
     }
@@ -136,28 +282,33 @@ $nbrNotif=$this->getDoctrine()
     /**
      * @Route("/evenementfront", name="evenementFront_index", methods={"GET"})
      */
-    public function indexFront(Request $request): Response
+    public function indexFront(Request $request, PaginatorInterface $paginator): Response
     {
         $search = new FitreRecherche();
-        $form= $this->createForm(FitreRechercheType::class,$search);
-        $form -> handleRequest($request);
+        $form = $this->createForm(FitreRechercheType::class, $search);
+        $form->handleRequest($request);
 
 
-        $evenement= new Evenement();
+        $evenement = new Evenement();
 
-        $dateevent=$evenement->getDateEvent();
-        $datejour=date("Y-m-d");
+        $dateevent = $evenement->getDateEvent();
+        $datejour = date("Y-m-d");
         $timestamp1 = strtotime($dateevent);
         $timestamp2 = strtotime($datejour);
-        if ($timestamp1 >= $timestamp2)
-        {
+        if ($timestamp1 >= $timestamp2) {
             $evenement->setEtat("effectue");
         }
 
 
-        $evenements = $this->getDoctrine()
+        $pagination = $this->getDoctrine()
             ->getRepository(Evenement::class)
             ->FindEventEncours($search);
+
+        $evenements = $paginator->paginate(
+            $pagination,
+            $request->query->getInt('page', 1), /*page number*/
+            6 /*limit per page*/
+        );
 
         $event = $this->getDoctrine()
             ->getRepository(Evenement::class)
@@ -166,7 +317,7 @@ $nbrNotif=$this->getDoctrine()
         return $this->render('evenement/EvenenementFront.html.twig', [
             'evenements' => $evenements,
             'event' => $event,
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ]);
     }
 
@@ -178,18 +329,33 @@ $nbrNotif=$this->getDoctrine()
     {
 
 
+        /*
+                $evenements = $this->getDoctrine()
+                    ->getRepository(Evenement::class)
+                    ->EventLeplusReserver();*/
 
         $evenements = $this->getDoctrine()
             ->getRepository(Evenement::class)
-            ->EventLeplusReserver();
+            ->createQueryBuilder('e')
+            ->where('e.etat like :etat')
+            ->setParameter('etat', 'en cours')
+            ->addOrderBy('e.nbReservation', 'desc')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->execute();
 
-        $dernier=$this->getDoctrine()
+
+        $dernier = $this->getDoctrine()
             ->getRepository(Evenement::class)
-            ->DernierEventAjoute();
+            ->createQueryBuilder('e')
+            ->addOrderBy('e.id', 'desc')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->execute();
 
         return $this->render('evenement/accueilFront.html.twig', [
             'evenements' => $evenements,
-            'dernier'=>$dernier,
+            'dernier' => $dernier,
         ]);
     }
 
@@ -197,33 +363,33 @@ $nbrNotif=$this->getDoctrine()
     /**
      * @Route("/lireplus/{id}", name="lireplusevenement_index", methods={"GET","POST"})
      */
-    public function showLirePlusEvent(Request $request,Evenement $evenement): Response
+    public function showLirePlusEvent(Request $request, Evenement $evenement, QrcodeService $qrcodeService): Response
     {
+        $qrCode = null;
 
         $notification = new Notifications();
-$titre =$evenement->getTitre();
+        $titre = $evenement->getTitre();
 
 
-        $ReservationEvent= new ReservationEvent();
+        $ReservationEvent = new ReservationEvent();
         $form = $this->createForm(ReservationEventType::class, $ReservationEvent);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $placeDispo=$evenement->getCapacite()-$evenement->getNbReservation();
+
+
+            $placeDispo = $evenement->getCapacite() - $evenement->getNbReservation();
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager2 = $this->getDoctrine()->getManager();
 
-            if ($ReservationEvent->getNbPlace()>$placeDispo)
-            {
+            if ($ReservationEvent->getNbPlace() > $placeDispo) {
                 echo "<script type = \"text/javascript\">
                     alert(\"Il ne reste plus que \"+$placeDispo +\" places pour cette événement. Vous ne pouvez pas réserver plus !\");
                     </script>";
-            }
-            else
-            {
+            } else {
                 $notification->setEtat("non lu");
-                $notification->setMotif("Vous avez une nouvelle réservation pour l'événement $titre"  );
+                $notification->setMotif("Vous avez une nouvelle réservation pour l'événement $titre");
                 $dateNotif = new \DateTime();
                 $notification->setDate($dateNotif);
                 $entityManager2->persist($notification);
@@ -232,35 +398,39 @@ $titre =$evenement->getTitre();
 
                 $entityManager->persist($ReservationEvent);
 
-            $ReservationEvent->setIdOrganisateur($evenement->getIdOrganisateur());
-            $ReservationEvent->setIdEvent($evenement->getId());
-            $ReservationEvent->setEtat("en cours");
+                $ReservationEvent->setIdOrganisateur($evenement->getIdOrganisateur());
+                $ReservationEvent->setIdEvent($evenement->getId());
+                $ReservationEvent->setEtat("en cours");
 
                 $ReservationEvent->setTitreEvent($evenement->getTitre());
                 $ReservationEvent->setImageEvent($evenement->getImage());
                 $ReservationEvent->setDateEvent($evenement->getDateEvent());
 
-                $ReservationEvent->setTotal($ReservationEvent->getNbPlace()*$evenement->getTarif());
-            $evenement->setNbReservation($evenement->getNbReservation()+$ReservationEvent->getNbPlace());
+                $ReservationEvent->setTotal($ReservationEvent->getNbPlace() * $evenement->getTarif());
+                $evenement->setNbReservation($evenement->getNbReservation() + $ReservationEvent->getNbPlace());
 
 
+                $data = $ReservationEvent->__toString();
+                $namePng = uniqid('', '') . '.png';
 
-            $entityManager->flush();
-            return $this->redirectToRoute('evenementFront_index');
+                $qrCode = $qrcodeService->qrcode($data, $namePng);
+
+                $ReservationEvent->setQrcode($namePng);
+                $entityManager->flush();
+                return $this->redirectToRoute('evenementFront_index');
             }
         }
-
-
 
 
         return $this->render('evenement/lireplusevenement.html.twig', [
             'evenement' => $evenement,
             'formReservation' => $form->createView(),
-             'notification' => $notification,
+            'notification' => $notification,
         ]);
 
 
     }
+
     /**
      * @Route("/new", name="evenement_new", methods={"GET","POST"})
      */
@@ -271,8 +441,8 @@ $titre =$evenement->getTitre();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file=$evenement->getImage();
-            $filename= md5(uniqid()).'.'.$file->guessExtension();
+            $file = $evenement->getImage();
+            $filename = md5(uniqid()) . '.' . $file->guessExtension();
             try {
                 $file->move(
                     $this->getParameter('imgEvent'),
@@ -321,10 +491,9 @@ $titre =$evenement->getTitre();
         $form->handleRequest($request);
 
 
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $file=$evenement->getImage();
-            $filename= md5(uniqid()).'.'.$file->guessExtension();
+            $file = $evenement->getImage();
+            $filename = md5(uniqid()) . '.' . $file->guessExtension();
             try {
                 $file->move(
                     $this->getParameter('imgEvent'),
@@ -362,7 +531,49 @@ $titre =$evenement->getTitre();
         $em->flush();
 
 
-
         return $this->redirectToRoute('evenement_index');
     }
+
+
+    /**
+     * @Route("/{id}/detailReservationEvent", name="detailReservationEvent", methods={"GET"})
+     */
+    public function detailReservationEvent(Request $request): Response
+    {
+        $id = $request->get("id");
+
+        $evenements = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->detailReservationEvent($id);
+
+        $event = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->changerEtatEvent();
+
+        $notification = $this->getDoctrine()
+            ->getRepository(Notifications::class)
+            ->createQueryBuilder('e')
+            ->where('e.etat like :etat')
+            ->setParameter('etat', 'non lu')
+            ->addOrderBy('e.id', 'desc')
+            ->getQuery()
+            ->execute();
+
+        $nbrNotif = $this->getDoctrine()
+            ->getRepository(Evenement::class)
+            ->CompterNbNotif();
+
+        return $this->render('evenement/detailReservationEvenement.html.twig', [
+            'evenements' => $evenements,
+            'event' => $event,
+            'notification' => $notification,
+            'nbrNotif' => $nbrNotif,
+
+        ]);
+    }
+
+
+
+
+
 }
