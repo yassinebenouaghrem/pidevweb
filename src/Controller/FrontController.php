@@ -189,6 +189,8 @@ class FrontController extends AbstractController
         $payment->setModePayment("Espèce");
         $payment->setPrixF($this->calcueTotale($id));
 
+        $this->modifierQuantiter($id);
+
         $this->modifierPanier($id);
         $this->ajouterPayment($payment);
 
@@ -327,6 +329,28 @@ class FrontController extends AbstractController
         }
 
         return $totale;
+    }
+
+    public function getProduit($id)
+    {
+        return $this->getDoctrine()->getRepository(Produits::class)->find($id);
+    }
+
+    public function modifierQuantiter($id)
+    {
+        $commandes = $this->Afficher_Commande($id);
+
+        foreach($commandes as $key => $commande)
+        {
+            $idProduit = $commande->getIdProduit();
+            $produit = $this->getProduit($idProduit);
+
+            $quant = $produit->getQuantitee() - $commande->getQuantitee();
+            $produit->setQuantitee($quant);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+        }
     }
 
 
