@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle promotion</title>
+</head>
+<body>
+<h1>Nouvelle promotion !!</h1>
+<p> cher client notre nouvelle promotion de {{ promotion.valp }}% dés le {{ promotion.getDated() ? promotion.getDated()|date('Y-m-d') : '' }} jusqu'a {{ promotion.getDatef() ? promotion.getDatef()|date('Y-m-d') : '' }}  </p>
+</body>
+</html>

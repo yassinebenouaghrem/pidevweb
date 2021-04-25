@@ -1,0 +1,48 @@
+{{form_start(form) }}
+
+<div>
+
+
+    <div class="form-group">
+
+        {{ form_label(form.idp, "ID promotion ") }}
+
+    </div>
+    <div class="form-group">
+
+        {{ form_errors(form.idp) }}
+        {{ form_widget(form.idp, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.valp, "Valeur de promotion en %  ") }}
+
+    </div>
+    <div class="form-group">
+        {{ form_errors(form.valp) }}
+        {{ form_widget(form.valp, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.dated, "Date debut promotion ") }}
+
+    </div>
+    <div class="form-group">
+        {{ form_errors(form.dated) }}
+        {{ form_widget(form.dated, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.datef, "Date fin promotion ") }}
+
+    </div>
+    <div class="form-group">
+        {{ form_errors(form.datef) }}
+        {{ form_widget(form.datef, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+
+    <div>
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    </div>>
+
+
+    {{ form_end(form) }}
+</div

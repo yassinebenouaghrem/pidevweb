@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+    <h1>User</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.getId() }}</td>
+            </tr>
+            <tr>
+                <th>Cin</th>
+                <td>{{ user.getCin() }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.getEmail() }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ user.getNom() }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ user.getPrenom() }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ user.getPassword() }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ user.getType() }}</td>
+            </tr>
+            <tr>
+                <th>Numtel</th>
+                <td>{{ user.getNumtel() }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ user.getAdresse() }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ user.getImage() }}</td>
+            </tr>
+            <tr>
+                <th>Etat</th>
+                <td>{{ user.getEtat() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('user_index') }}">back to list</a>
+
+    <a href="{{ path('user_edit', {'id': user.getId()}) }}">edit</a>
+
+    {{ include('user/_delete_form.html.twig') }}
+{% endblock %}

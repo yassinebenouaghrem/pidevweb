@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Consultation{% endblock %}
+
+{% block body %}
+    <h1>Consultation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ consultation.getId() }}</td>
+            </tr>
+            <tr>
+                <th>Idtherapeute</th>
+                <td>{{ consultation.getIdtherapeute() }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ consultation.getTitre() }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ consultation.getDescription() }}</td>
+            </tr>
+            <tr>
+                <th>Emplacement</th>
+                <td>{{ consultation.getEmplacement() }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ consultation.getPrix() }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ consultation.getImage() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('consultation_index') }}">back to list</a>
+
+    <a href="{{ path('consultation_edit', {'id': consultation.getId()}) }}">edit</a>
+
+    {{ include('consultation/_delete_form.html.twig') }}
+{% endblock %}

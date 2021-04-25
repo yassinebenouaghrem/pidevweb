@@ -1,0 +1,13 @@
+{{ form_start(form) }}
+
+    <div class="form-group">
+        {{ form_label(form.etat, "Etat ") }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.etat, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+    <div>
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    </div>
+
+{{ form_end(form) }}

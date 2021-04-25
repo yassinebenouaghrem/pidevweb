@@ -1,0 +1,11 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}New Notifications{% endblock %}
+
+{% block container %}
+    <h1>Create new Notifications</h1>
+
+    {{ include('notifications/_form.html.twig') }}
+
+    <a href="{{ path('notifications_index') }}">back to list</a>
+{% endblock %}

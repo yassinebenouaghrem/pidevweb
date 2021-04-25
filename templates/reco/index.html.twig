@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reco index{% endblock %}
+
+{% block body %}
+    <h1>Reco index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Ecrivain</th>
+                <th>Image</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reco in recos %}
+            <tr>
+                <td>{{ reco.getId() }}</td>
+                <td>{{ reco.getTitre() }}</td>
+                <td>{{ reco.getDescription() }}</td>
+                <td>{{ reco.getEcrivain() }}</td>
+                <td>{{ reco.getImage() }}</td>
+                <td>{{ reco.getType() }}</td>
+                <td>
+                    <a href="{{ path('reco_show', {'id': reco.getId()}) }}">show</a>
+                    <a href="{{ path('reco_edit', {'id': reco.getId()}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('reco_new') }}">Create new</a>
+{% endblock %}

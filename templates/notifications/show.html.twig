@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+    <h1>Notifications</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ notification.getId() }}</td>
+            </tr>
+            <tr>
+                <th>Etat</th>
+                <td>{{ notification.getEtat() }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ notification.getDate() ? notification.getDate()|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('notifications_index') }}">back to list</a>
+
+    <a href="{{ path('notifications_edit', {'id': notification.getId()}) }}">edit</a>
+
+    {{ include('notifications/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reco{% endblock %}
+
+{% block body %}
+    <h1>Reco</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ reco.getId() }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ reco.getTitre() }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ reco.getDescription() }}</td>
+            </tr>
+            <tr>
+                <th>Ecrivain</th>
+                <td>{{ reco.getEcrivain() }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ reco.getImage() }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ reco.getType() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('reco_index') }}">back to list</a>
+
+    <a href="{{ path('reco_edit', {'id': reco.getId()}) }}">edit</a>
+
+    {{ include('reco/_delete_form.html.twig') }}
+{% endblock %}

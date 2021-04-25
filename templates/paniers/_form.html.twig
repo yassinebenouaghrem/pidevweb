@@ -1,0 +1,23 @@
+{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+    <div class="form-group">
+        {{ form_label(form.cin, 'Identifant du Client') }}
+        {{ form_errors(form.cin) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.cin, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.statusPanier, 'Statut du panier') }}
+        {{ form_errors(form.statusPanier) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.statusPanier, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+
+
+    <div>
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    </div>
+
+{{ form_end(form) }}

@@ -1,0 +1,84 @@
+{{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.idOrganisateur, "Organisateur ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.idOrganisateur, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.type, "Type ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.type, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.titre, "Titre ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.titre, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.description, "Description ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.description, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.lieu, "Lieu ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.lieu, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.dateEvent, "dateEvent ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.dateEvent, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.image, "Image ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.image, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.tarif, "Tarif ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.tarif, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.capacite, "Capaciter ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.capacite, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.nbReservation, "Nombre de réservation ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.nbReservation, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.etat, "Etat ") }}
+
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.etat, {'attr':{'class':'form-control col-sm-6'}}) }}
+            </div>
+            <div>
+                <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+            </div>
+
+{{ form_end(form) }}
