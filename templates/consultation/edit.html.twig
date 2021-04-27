@@ -1,0 +1,14 @@
+
+{% extends 'baseBackthe.html.twig' %}
+
+{% block title %}Edit Consultation{% endblock %}
+
+{% block container %}
+    <h1>Edit Consultation</h1>
+
+    {{ include('consultation/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('consultation_index') }}">back to list</a>
+
+
+{% endblock %}

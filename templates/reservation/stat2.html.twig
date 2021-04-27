@@ -1,0 +1,41 @@
+{% extends 'baseBackthe.html.twig' %}
+{% block container %}
+
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+        ];
+        const data = {
+            labels: {{ dates| json_encode|raw }},
+            datasets: [{
+                label: 'Statistique des nombre de reservations par date',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: {{ annoncesCount|json_encode|raw }},
+            }]
+        };
+        const config = {
+            type: 'line',
+            data,
+            options: {}
+        };
+    </script>
+
+    <script>
+        // === include 'setup' then 'config' above ===
+
+        var myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+{% endblock %}

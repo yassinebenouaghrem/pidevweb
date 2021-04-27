@@ -1,0 +1,97 @@
+{% extends 'baseBackthe.html.twig' %}
+
+{% block title %}ReservationEvent index{% endblock %}
+
+
+ {% block notif %}
+     <!-- Nav Item - Alerts -->
+     <li class="nav-item dropdown no-arrow mx-1">
+         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             <i class="fas fa-bell fa-fw"></i>
+             <!-- Counter - Alerts -->
+             <span class="badge badge-danger badge-counter" value="">{{ notification | length}}</span>
+         </a>
+         <!-- Dropdown - Alerts -->
+         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+              aria-labelledby="alertsDropdown">
+             <h6 class="dropdown-header">
+                 Notifications
+             </h6>
+             {% for notification in notification %}
+
+                 <a class="dropdown-item d-flex align-items-center" href="{{ path('notification', {'id': notification.getId()})}} ">
+                     <div class="mr-3">
+                         <div class="icon-circle bg-primary">
+                             <i class="fas fa-file-alt text-white"></i>
+                         </div>
+                     </div>
+                     <div>
+                         <div class="small text-gray-500">{{ notification.date ? notification.date|date('d-m-Y') : ''  }}</div>
+                         <span class="font-weight-bold">{{ notification.motif }}</span>
+                     </div>
+                 </a>
+             {% else %}
+                 <p style="text-align: center">Pas de Nouvelle Notification</p>
+             {% endfor %}
+             <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+         </div>
+     </li>
+ {% endblock %}
+
+
+{% block container %}
+    <h1>Gestion des réservations effectués</h1>
+
+    <div class="card-body">
+        <div class="table-responsive" center>
+            <table class="table table-bordered" style="white-space: nowrap;width: 70%" center >
+                <thead class="thead-dark">
+                <tr>
+
+                    <th>Nom du client </th>
+                    <th>Evenement </th>
+                    <th>Nb place réserver</th>
+                    <th>Tarif total</th>
+                    <th>Mode de Paiement</th>
+                    <th>Etat</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for reservation_event in reservation_events %}
+                    <tr>
+
+
+                        <td> {% for client in client %}
+                                {% if client.id==reservation_event.idClient %}
+                                    {{ client.nom }} {{  client.prenom}}
+                                {% elseif client.id==12%}
+                                    {{ client.nom }} {{  client.prenom}}
+
+                                {% endif %}
+
+                            {% endfor %}</td>
+                        <td>{{ reservation_event.titreEvent }}</td>
+                        <td>{{ reservation_event.nbPlace }}</td>
+                        <td>{{ reservation_event.total }}</td>
+                        <td>{{ reservation_event.modePaiement }}</td>
+                        <td><a style="font-weight:bold;color: #0056b3;">{{ reservation_event.etat }}</a></td>
+
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="13">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="pagination">
+        {{ knp_pagination_render(reservation_events) }}
+    </div>
+{% endblock %}
+
+

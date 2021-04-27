@@ -1,0 +1,465 @@
+{% extends 'baseBackthe.html.twig' %}
+
+
+ {% block notif %}
+     <!-- Nav Item - Alerts -->
+     <li class="nav-item dropdown no-arrow mx-1">
+         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             <i class="fas fa-bell fa-fw"></i>
+             <!-- Counter - Alerts -->
+             <span class="badge badge-danger badge-counter" value="">{{ notification | length}}</span>
+         </a>
+         <!-- Dropdown - Alerts -->
+         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+              aria-labelledby="alertsDropdown">
+             <h6 class="dropdown-header">
+                 Notifications
+             </h6>
+             {% for notification in notification %}
+
+                 <a class="dropdown-item d-flex align-items-center" href="{{ path('notification', {'id': notification.getId()})}} ">
+                     <div class="mr-3">
+                         <div class="icon-circle bg-primary">
+                             <i class="fas fa-file-alt text-white"></i>
+                         </div>
+                     </div>
+                     <div>
+                         <div class="small text-gray-500">{{ notification.date ? notification.date|date('d-m-Y') : ''  }}</div>
+                         <span class="font-weight-bold">{{ notification.motif }}</span>
+                     </div>
+                 </a>
+             {% else %}
+                 <p style="text-align: center">Pas de Nouvelle Notification</p>
+             {% endfor %}         <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+         </div>
+     </li>
+ {% endblock %}
+
+
+{% block container %}
+
+
+    <link href="{{ asset('back/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet') }}" type="text/css">
+    <link
+            href="{{ asset('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i') }}"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{{ asset('back/css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Main Content -->
+    <div id="content">
+
+
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+
+
+            <!-- Content Row -->
+            <div class="row">
+
+                <!-- Earnings (Monthly) Card Example -->
+
+                <!-- Pending Requests Card Example -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Nombres de réservation totales</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ totalReser }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Revenues encaissés (Paiement sur place)</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ revenueencaissesurplace }} DT</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Revenues encaissés (Paiement en ligne) </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{revenueTotalEenligne|raw }} DT </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Revenues a encaissé (Paiement sur place)
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{revenueAAAencaissesurplace|raw }} DT </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <!-- Content Row -->
+
+            <div class="row">
+
+                <!-- Area Chart -->
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div
+                                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Nombre de réservation en fonction du type</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                     aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Dropdown Header:</div>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+                                <canvas id="myChart" ></canvas>                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    let myChart= document.querySelector("#myChart")
+                    let graphestat = new Chart(myChart, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ NomType|raw }},
+                            datasets: [{
+                                label: 'Nombre de réservations',
+                                data: {{ countType|raw }},
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        }
+                    })
+                </script>
+
+
+                <!-- Pie Chart -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Mode de paiement le plus utilisé</h6>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="myChartPie" width="400" height="400"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <script>
+                    let myChartPie= document.querySelector("#myChartPie")
+                    let graphestatt = new Chart(myChartPie, {
+                        type: 'pie',
+                        data: {
+                            labels: {{ NomModeP|raw }},
+                            datasets: [{
+                                label: 'Mode de paiement',
+                                data: {{ countModeP|raw }},
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        }
+                    })
+                </script>
+
+                <!-- chart bar 2 -->
+
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div
+                                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Nombre de réservation pour les événements en cours</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                     aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Dropdown Header:</div>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+                                <canvas id="barChart2" ></canvas>                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Script bar chart2 -->
+
+                <script>
+                    let barChart2= document.querySelector("#barChart2")
+                    let graphestattt = new Chart(barChart2, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ TitreEvent|raw }},
+                            datasets: [{
+                                label: 'Nombre de réservations',
+                                data: {{ nbREvent|raw }},
+                                backgroundColor: [
+                                    'rgba(255, 0, 0, 0.8)',
+                                    'rgba(255, 0, 0, 0.4)',
+                                    'rgba(255, 0, 0, 0.6)',
+                                    'rgba(255, 0, 0, 0.9)',
+                                    'rgba(255, 0, 0, 0.5)',
+                                    'rgba(255, 0, 0, 0.3)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 0, 0, 0.8)',
+                                    'rgba(255, 0, 0, 0.4)',
+                                    'rgba(255, 0, 0, 0.6)',
+                                    'rgba(255, 0, 0, 0.9)',
+                                    'rgba(255, 0, 0, 0.5)',
+                                    'rgba(255, 0, 0, 0.3)',
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                </script>
+
+                <!-- Pie chart 2 -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Etat des événements </h6>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="chartEtat"  width="400" height="400">></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                let myChartPieEtat= document.querySelector("#chartEtat")
+                let graphetat = new Chart(myChartPieEtat, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {{ typeEtat|raw }},
+                        datasets: [{
+                            label: 'Etat',
+                            data: {{ countEtat|raw }},
+                            backgroundColor: [
+
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    }
+                })
+            </script>
+
+            <!-- Script pie chart -->
+
+
+            <!-- Content Row -->
+            <div class="row">
+
+                <!-- Content Column -->
+                <div class="col-lg-6 mb-4">
+
+                    <!-- Project Card Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Pourcentage de réservation de chaque événement</h6>
+                        </div>
+
+                        <div class="card-body">
+                            {% for ProgressionEventEncours in ProgressionEventEncours %}
+
+                                <h4 class="small font-weight-bold">{{ ProgressionEventEncours.titre }} <span
+                                            class="float-right">{{ ((ProgressionEventEncours.nbReservation /ProgressionEventEncours.capacite) *100) |round }} %</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ ((ProgressionEventEncours.nbReservation /ProgressionEventEncours.capacite) *100) |round }}%"
+                                         aria-valuenow="{{ ((ProgressionEventEncours.nbReservation /ProgressionEventEncours.capacite) *100) |round }}" aria-valuemin="0" aria-valuemax="50"></div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
+
+                    <!-- Color System -->
+
+
+                </div>
+
+                <div class="col-lg-6 mb-4">
+
+                    <!-- Illustrations -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Rappel événement ayant lieu les 5 prochains jours</h6>
+                        </div>
+                        <div class="card-body">
+                            {% for RappelEvent in RappelEvent %}
+                                {% set difference = date(RappelEvent.dateEvent ? RappelEvent.dateEvent|date('d-m-Y') : '').diff(date("now"|date('d-m-Y'))) %}
+                                {% set leftDays = difference.days %}
+
+                                <ul>
+                                    <li style="color:#e74a3b;font-weight: bold;font-size: 18px ">L'événement <a style="color:#4e73df ">"{{ RappelEvent.titre}}"</a> aura lieu le {{ RappelEvent.dateEvent ? RappelEvent.dateEvent|date('d-m-Y') : ''}} , soit dans <a style="color:#4e73df ">{{ leftDays }} jour(s)</a></li>
+                                </ul>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Approach -->
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+
+    <script src="{{ asset('back/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('back/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{{ asset('back/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{{ asset('back/js/sb-admin-2.min.js') }}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{ asset('back/vendor/chart.js/Chart.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ asset('back/js/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ asset('back/js/demo/chart-pie-demo.js') }}"></script>
+
+
+
+{% endblock %}
+

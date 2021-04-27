@@ -1,0 +1,248 @@
+{% extends 'frontbase.html.twig' %}
+{% block imageAccueil %}
+    <section class="hero-wrap js-fullheight" style="background-image: url('{{ asset('Front/images/bg_yoga2.jpg') }}');" data-section="home" data-stellar-background-ratio="0.5">
+
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start" data-scrollax-parent="true">
+                <div class="col-md-6 pt-5 ftco-animate">
+                    <div class="mt-5">
+                        <h1 class="mb-4">Profitez de<br>nos Evénements</h1>
+                        <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{%  endblock %}
+
+{% block meteo %}
+    <link rel="stylesheet" href="{{ asset('Front/style2.css') }}">
+    <link rel="stylesheet" href="{{ asset('Front/css/meteo.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+
+
+<section class="ftco-section bg-light" id="blog-section">
+    <div class="container">
+
+
+
+
+
+
+
+        <div class="row justify-content-center mb-5 pb-5">
+
+
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <h2 class="mb-4">Consulter la météo du jour </h2>
+
+                <div class="form-group"> <input type="text" placeholder="Choisir une ville" class="input_text">
+                    <input type="submit" value="Consulter" class="submit">  </div>
+
+            </div>
+
+
+
+
+            <script type="text/javascript">
+                var iconcode = a.weather[0].icon;
+                var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+                $('#wicon').attr('src', iconurl);
+
+
+            </script>
+
+
+            <div class="widgetM">
+
+                <p id="weatherIcon">  <img id="weatherIcon" alt="" > </p>
+
+
+
+                <div class="detailsM">
+                    <div class="temperatureM"><p class="temp" style="font-size: 75px">19°C</p></div>
+                    <div class="summaryM">
+                        <p class="summaryTextM"><p class="desc" style="text-transform:capitalize ;font-size: 30px">nuageux </p></p>
+                    </div>
+                    <div class="precipitationM"><h1 class="name" id="name">Tunis</h1></div>
+                </div>
+                <div class="pictoBackdropM"></div>
+                <div class="pictoFrameM"></div>
+                <div class="pictoCloudBigM"></div>
+                <div class="pictoCloudFillM"></div>
+                <div class="pictoCloudSmallM"></div>
+            </div>
+        </div>
+
+        <script   >
+
+            var input = document.querySelector('.input_text');
+            var main = document.querySelector('#name');
+            var temp = document.querySelector('.temp');
+            var desc = document.querySelector('.desc');
+            var clouds = document.querySelector('.clouds');
+            var button= document.querySelector('.submit');
+
+            const img = document.querySelector('#weatherIcon');
+
+            button.addEventListener('click', function(name){
+                fetch('https://api.openweathermap.org/data/2.5/weather?q='+input.value+'&appid=16b1873586f33cce391c0852c2679b1a&units=metric&lang=Fr')
+                    .then(response => response.json())
+                    .then(data => {
+                        var tempValue = data['main']['temp'];
+                        var nameValue = data['name'];
+                        var descValue = data['weather'][0]['description'];
+                        let icon = data['weather'][0]['icon'];
+
+                        main.innerHTML = nameValue;
+                        desc.innerHTML = descValue;
+                        temp.innerHTML = tempValue+'°C';
+                        img.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
+
+                        input.value ="";
+
+                    })
+
+                    .catch(err => alert("Wrong city name!"));
+            })
+
+        </script>
+
+        <div class="row justify-content-center mb-5 pb-5">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <h2 class="mb-4">Nos évènements</h2>
+                <p>Choisissez l'évènement qui vous convient parmi une multitude d'évènements </p>
+            </div>
+        </div>
+
+
+        <div class="jumbotron" style="height: 75%;">
+            <div class="container">
+                <h5 class="mb-3">Recherche filtré</h5>
+
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            {{ form_label(form.TypeEvent,"Type de l'événement") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(form.TypeEvent, {'label':false,'attr':{'class':'form-control '}}) }}
+
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.PrixMax,"Budget maximum") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(form.PrixMax, {'placeholder':'budget','label':false,'attr':{'class':'form-control ','placeholder':"Prix max de l'événement"}}) }}
+
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary">Rechercher </button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col">
+                        <div class="form-group">
+                            {{ form_label(form.dateDebut,"Date début") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(form.dateDebut, {'label':false,'attr':{'class':'form-control '}}) }}
+
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.dateFin,"Date Fin") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(form.dateFin, {'label':false,'attr':{'class':'form-control '}}) }}
+
+                        </div>
+
+                        <div class="form-group">
+                            <a href="{{ path('evenementFront_index') }}" class="btn btn-secondary">Réinitialiser </a>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+                {{ form_end(form) }}
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+        <div class="row d-flex">
+
+
+
+            {% for evenement in evenements %}
+
+                {% set difference = date(evenement.dateEvent ? evenement.dateEvent|date('d-m-Y') : '').diff(date("now"|date('d-m-Y'))) %}
+                {% set leftDays = difference.days %}
+
+
+
+            <div class="col-md-4 ftco-animate">
+                <div class="blog-entry">
+                    <a href="{{ path('lireplusevenement_index', {'id': evenement.getId()}) }}" class="block-20" >
+
+                        <img src="{{ asset('imgEvent/')~ evenement.image }}"  >
+                    </a>
+                    <div class="text d-block">
+                        <div class="meta mb-3">
+                            <div><a href="{{ path('lireplusevenement_index', {'id': evenement.getId()}) }}" style="font-size:15px">Date : {{ evenement.dateEvent ? evenement.dateEvent|date('d-m-Y') : '' }}</a></div>
+
+                        </div>
+
+                        <h3 class="heading"><a href="{{ path('lireplusevenement_index', {'id': evenement.getId()}) }}" style="font-size:25px;text-transform: uppercase;">{{ evenement.titre }}</a></h3>
+                        <p>{{ evenement.description }}</p>
+                        <div class="meta mb-3">
+                            <div><a href="{{ path('lireplusevenement_index', {'id': evenement.getId()}) }}" style="font-size:20px">{{ evenement.tarif }} dt</a></div>
+                            <div><p href="{{ path('lireplusevenement_index', {'id': evenement.getId()}) }}" class="meta-chat" style="font-size: 15px;color: #2653d4">Il reste <a style="font-size: 15px;color: #e12717;font-weight: bold">{{ leftDays }} Jours</a> avant le début de l'événement </p></div>
+                            <div class="tagcloud">
+                                <a href="#" class="tag-cloud-link">{{ evenement.type }}</a>
+
+                            </div>
+                        </div>
+                        {% if app.session.get('email')  !='' %}
+                        <p><a href="{{ path('lireplusevenement_index', {'id': evenement.getId()}) }}" class="btn btn-primary py-4 px-5" style="font-size: 15px">Réserver</a></p>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <p style="text-align: center">Désolé, aucun événement ne correspond à votre recherche</p>
+            {% endfor %}
+
+
+            </div>
+
+        <div class="pagination">
+            {{ knp_pagination_render(evenements) }}
+        </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

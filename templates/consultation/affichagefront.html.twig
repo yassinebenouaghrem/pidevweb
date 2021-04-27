@@ -1,0 +1,334 @@
+{% extends 'frontbase.html.twig' %}
+{% block imageAccueil %}
+    <section class="hero-wrap js-fullheight" style="background-image: url('{{ asset('Front/images/imageterr.jpg') }}');" data-section="home" data-stellar-background-ratio="0.5">
+
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start" data-scrollax-parent="true">
+                <div class="col-md-6 pt-5 ftco-animate">
+                    <div class="mt-5">
+                        <h1 class="mb-4">Nos offres de Consultations</h1>
+                        <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%  endblock %}
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet'>
+    <script src="//code.jquery.com/jquery.js"></script>
+    {% if app.session.get('email')  !='' %}
+
+        <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+        {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+    {% endif %}
+    <section class="ftco-section" id="doctor-section">
+
+        <div class="container-fluid px-5">
+            <div class="row justify-content-center mb-5 pb-2">
+                <div class="col-md-8 text-center heading-section ftco-animate">
+
+                    <h2 class="mb-4">Nos offres de consultations</h2>
+                </div>
+            </div>
+
+
+
+            <style type="text/css">
+                /** Twitter Typeahead **/
+                .twitter-typeahead, .typeahead, .empty-message  {
+                    width: 100%;
+                }
+                .tt-menu {
+                    background: white;
+                    width: 100%;
+                }
+                .tt-suggestion {
+                    overflow: hidden;
+                    display: table;
+                    width: 100%;
+                    padding: 10px 10px;
+                    border-bottom: 1px solid #e9ecf2;
+                }
+                /** Movie Card (Movie Suggestions) **/
+                .movie-card {
+                    position: relative;
+                    padding: 8px;
+                }
+                .movie-card-poster {
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                    width: 52px;
+                    height: 52px;
+                    border: 2px solid #ccd6dd;
+                    border-radius: 5px;
+                }
+                .movie-card:hover .movie-card-poster {
+                    border-color: #f5f8fa;
+                }
+                .movie-card-details {
+                    min-height: 60px;
+                    padding-left: 60px;
+                }
+                .movie-card-name,
+                .movie-card-year {
+                    display: inline-block;
+                }
+                .movie-card-name {
+                    font-weight: 700;
+                }
+                .movie-card-year {
+                    color: #8899a6;
+                }
+                .movie-card:hover .movie-card-year {
+                    color: #fff;
+                }
+                .movie-card-plot {
+                    margin-top: 5px;
+                    font-size: 14px;
+                    line-height: 18px;
+                }
+                .movie-card:hover,
+                .movie-card.is-active {
+                    color: #fff;
+                    background: #0088CC;
+                    cursor: pointer;
+                }
+                .empty-message {
+                    position: relative;
+                    padding: 10px;
+                    font-size: 16px;
+                    line-height: 30px;
+                    text-align: center;
+                }
+            </style>
+            <div class="container">
+                {{
+                render(
+                    controller('App\\Controller\\ConsultationController::searchBar')
+                )
+                }}
+            </div>
+            {% block jstestfourat %}
+                <script type="text/javascript" src="{{ asset('jquery.min.js')}}"></script>
+                <script type="text/javascript" src="{{ asset('bloodhound.jquery.min.js')}}"></script>
+                <script type="text/javascript" src="{{ asset('typeahead.jquery.min.js')}}"></script>
+            {% endblock %}
+
+
+            <script type="text/javascript">
+                $(document).ready(function ()
+                {
+                    var states = new Bloodhound(
+                        {
+                            datumTokenizer: Bloodhound.tokenizers.whitespace,
+                            queryTokenizer: Bloodhound.tokenizers.whitespace,
+
+                            remote: {
+                                url: "{{ path('handle_search') }}/%QUERY%",
+                                wildcard: '%QUERY%',
+                                filter: function (states)
+                                {
+                                    return $.map(states, function (state)
+                                    {
+                                        return {
+                                            state_id: state.id,
+                                            state_emplacement: state.emplacement,
+                                            state_image: state.image,
+                                            state_titre: state.titre
+                                        }
+                                    })
+                                }
+                            }
+                        })
+
+                    states.initialize();
+
+                    $('#form_query').typeahead(
+                        {
+                            hint: true
+                        },
+                        {
+                            name: 'states',
+                            source: states.ttAdapter(),
+                            display: 'state_emplacement',
+                            templates: {
+                                suggestion: function (data)
+                                {
+                                    return `
+
+                                <a href='{{ path('city_page') }}/`+data.state_id+`'>
+                                   <img src="{{ asset('uploads/images/`+data.state_image+`') }}"
+                                     alt = "" style = "width: 60px ; height:60px">
+                                    <span>`+data.state_emplacement+`</span>
+
+                                    </br>
+                                                                        <strong>`+data.state_titre+`</strong>
+
+                                </div>
+                            `
+                                },
+                                footer: function (query)
+                                {
+                                    return '<div class="text-center">More results about: '+ query.query +'</div>'
+                                }
+                            }
+                        })
+
+                })
+            </script>
+            <div class="meta mb-3">
+                <a href="{{ path('tri_affichage') }}" class="btn btn-secondary py-3 px-4">Tri par prix</a></p>
+            </div>
+
+            <div class="row">
+                {% for consultation in consultations %}
+
+                    <div class="col-md-6 col-lg-3 ftco-animate">
+                        <div class="staff">
+                            <div class="text pt-3 text-center">
+                                {% if ( consultation.getDate() > date('-1day')) %}
+
+                                    {% if consultation.getEtat() == "Disponible" %}
+                                        <h3 style="color:#00ff00" >  {{ consultation.getEtat() }}</h3>
+                                    {% endif %}
+
+                                    {% if consultation.getEtat() == "Reservé" %}
+
+                                        <h3 style="color:#ff0000" >  {{ consultation.getEtat() }}</h3>
+                                    {% endif %}
+                                {% else %}
+                                    <h3 style="color:#ff0000" >  Expiré </h3>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="img-wrap d-flex align-items-stretch">
+                                <img src="{{ asset('uploads/images/' ~ consultation.getImage()) }}"
+                                     alt = "" style = "width: 300px ; height:300px">
+
+                            </div>
+                            <div class="text pt-3 text-center">
+                                <div class="meta mb-3">
+                                    <div><a href="#">{{ consultation.getDate() ? consultation.date|date('Y-m-d') : '' }}</a></div>
+                                </div>
+                                <span class="position mb-2">{{ consultation.getHeuredeb()|trim(':.00', 'right') }} - {{ consultation.getHeurefin()|trim(':.00', 'right') }}</span>
+                                <span class="position mb-2">{{ consultation.getPrix() }} DT</span>
+
+                                <span class="position mb-2">{{ consultation.getTitre() }}</span>
+                                <div class="faded">
+                                    <p>{{ consultation.getDescription() }}</p>
+                                    <h3 class="mb-2">{{ consultation.getEmplacement() }}</h3>
+                                    <ul class="ftco-social text-center">
+                                        <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                                        <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                                        <li class="ftco-animate"><a href="#"><span class="icon-google-plus"></span></a></li>
+                                        <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                                    </ul>
+                                    {% if app.session.get('email')  !='' %}
+
+                                        {% if consultation.getEtat() == "Disponible" and  ( consultation.getDate() > date('-1day')) %}
+                                            <p><a href="{{ path('reservation_new', {'consultation': consultation.id}) }}" class="btn btn-primary">Reserver</a></p>
+                                        {% endif %}
+                                    {% endif %}
+                                    <p><a href="{{ path("mapF",{'id':consultation.idtherapeute} )}}" class="btn btn-primary">Emplacement</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
+                {% endfor %}
+            </div>
+
+
+        </div>
+
+    </section>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#hi tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    <div>
+        {{ knp_pagination_render(consultations) }}
+    </div>
+
+    <section class="ftco-section contact-section" id="contact-section">
+        <div class="container">
+            <div class="row justify-content-center mb-5 pb-3">
+                <div class="col-md-7 heading-section text-center ftco-animate">
+                    <h2 class="mb-4">MAP</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyA6hWEeOFooNPh9unw0_BZpKNn6Atz2KCM"></script>
+
+
+    <script>
+
+        var searchInput = 'search_input';
+
+        $(document).ready(function () {
+            var autocomplete;
+            autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
+                types: ['geocode'],
+            });
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var near_place = autocomplete.getPlace();
+                document.getElementById('loc_lat').value = near_place.geometry.location.lat();
+                document.getElementById('loc_long').value = near_place.geometry.location.lng();
+
+                document.getElementById('latitude_view').innerHTML = near_place.geometry.location.lat();
+                document.getElementById('longitude_view').innerHTML = near_place.geometry.location.lng();
+            });
+        });
+        $(document).on('change', '#'+searchInput, function () {
+            document.getElementById('latitude_input').value = '';
+            document.getElementById('longitude_input').value = '';
+
+            document.getElementById('latitude_view').innerHTML = '';
+            document.getElementById('longitude_view').innerHTML = '';
+        });
+
+    </script>
+    <div class="form-group">
+        <label>Location:</label>
+        <input type="text" class="form-control" id="search_input" placeholder="Type address..." />
+        <input type="hidden" id="loc_lat" />
+        <input type="hidden" id="loc_long" />
+    </div>
+
+    <!-- Display latitude and longitude -->
+    <div class="latlong-view">
+        <p><b>Latitude:</b> <span id="latitude_view"></span></p>
+        <p><b>Longitude:</b> <span id="longitude_view"></span></p>
+    </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+
+            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Zenlife &copy;<script>document.write(new Date().getFullYear());</script> Project <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank"> DEVCC</a>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+        </div>
+    </div>
+
+{% endblock %}

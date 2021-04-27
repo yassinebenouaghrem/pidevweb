@@ -1,0 +1,46 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block container %}
+    <h1>Gestion des utilisateurs</h1>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Cin</th>
+                <th>Email</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Password</th>
+                <th>Type</th>
+                <th>Etat</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.cin }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.password }}</td>
+                <td>{{ user.type }}</td>
+                <td>{{ user.etat }}</td>
+                <td>
+                    <a  class="btn btn-success btn-circle btn-lg" href="{{ path('user_confirm', {'id': user.getId()}) }}"><i class="fa fa-check"></i></a>
+                    <a class="btn btn-danger btn-circle btn-lg"   href="{{ path('user_ban', {'id': user.getId()}) }}"><i class="fa fa-ban"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

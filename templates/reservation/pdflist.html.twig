@@ -1,0 +1,57 @@
+
+{% block body %}
+    <h2 class="page-header">
+
+        <center>   <img style="position: center" src="http://localhost/Crudv1/public/images/logo.JPG" alt="" width="200"></center>
+
+        <small class="pull-right"></small>
+    </h2>
+    <h1 align="center">Liste des reservations</h1><hr>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="wd-15p">Nom et prenom</th>
+
+            <th class="wd-15p">Type</th>
+            <th class="wd-15p">Heure debut </th>
+            <th class="wd-15p">Heure fin </th>
+
+            <th class="wd-20p">Etat</th>
+            <th class="wd-15p">Date</th>
+            <th class="wd-15p">Image</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+
+        {% for a in reservations %}
+
+            <tr >
+                {% for k in users %}
+
+                    {% if k.getId()==a.getCintherapeute() %}
+                        <td> {{ k.getNom() }} {{ k.getPrenom() }}</td>
+                    {% endif %}
+                {% endfor %}
+
+                <td>{{a.type}}</td>
+                <td>{{(a.heure|trim('00', 'right'))|trim(':','right')}}</td>
+                <td>{{(a.heurefin|trim('00', 'right'))|trim(':','right')}}</td>
+                <td>{{a.etat}}</td>
+                <td>{{                a.getDate() ? a.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <img src="http://localhost/Crudv1/public/uploads/images/{{a.image}}"
+                         alt = "" style = "width: 80px ; height:80px">
+                </td>
+
+            </tr >
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    </div>
+
+{% endblock %}

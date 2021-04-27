@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('reservation_attente', {'idreservation': reservations.getIdreservation()}) }}" onsubmit="return confirm('Voulez vous vraiment rendre cette reservations en attente?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('attente' ~ reservations.getIdreservation()) }}">
+    <span class="icon text-white-50">
+
+    <button class="btn btn-warning btn-icon-split">Rendre en attente cette reservation</button>
+                                                </span>
+
+
+</form>

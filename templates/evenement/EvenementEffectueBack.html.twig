@@ -1,0 +1,100 @@
+{% extends 'baseBackthe.html.twig' %}
+
+
+ {% block notif %}
+     <!-- Nav Item - Alerts -->
+     <li class="nav-item dropdown no-arrow mx-1">
+         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             <i class="fas fa-bell fa-fw"></i>
+             <!-- Counter - Alerts -->
+             <span class="badge badge-danger badge-counter" value="">{{ notification | length}}</span>
+         </a>
+         <!-- Dropdown - Alerts -->
+         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+              aria-labelledby="alertsDropdown">
+             <h6 class="dropdown-header">
+                 Notifications
+             </h6>
+             {% for notification in notification %}
+
+                 <a class="dropdown-item d-flex align-items-center" href="{{ path('notification', {'id': notification.getId()})}} ">
+                     <div class="mr-3">
+                         <div class="icon-circle bg-primary">
+                             <i class="fas fa-file-alt text-white"></i>
+                         </div>
+                     </div>
+                     <div>
+                         <div class="small text-gray-500">{{ notification.date ? notification.date|date('d-m-Y') : ''  }}</div>
+                         <span class="font-weight-bold">{{ notification.motif }}</span>
+                     </div>
+                 </a>
+             {% else %}
+                 <p style="text-align: center">Pas de Nouvelle Notification</p>
+             {% endfor %}         <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+         </div>
+     </li>
+ {% endblock %}
+
+{% block title %}Evenement index{% endblock %}
+
+{% block container %}
+    <h1>Gestion des événements effectués</h1>
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <div class="container" >
+                <table class="table table-bordered"  style="white-space: inherit;width: 0%" cellspacing="0"  >
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Type</th>
+                        <th>Titre</th>
+                        <th >Description</th>
+                        <th>Lieu</th>
+                        <th>DateEvent</th>
+                        <th>Image</th>
+                        <th>Tarif</th>
+                        <th>Capacite</th>
+                        <th>nb Reser</th>
+                        <th>Etat</th>
+                        <th>Actions</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for evenement in evenements %}
+                        <tr>
+                            <td>{{ evenement.type }}</td>
+                            <td>{{ evenement.titre }}</td>
+                            <td>{{ evenement.description }}</td>
+                            <td>{{ evenement.lieu }}</td>
+                            <td>{{ evenement.dateEvent ? evenement.dateEvent|date('d-m-Y') : '' }}</td>
+                            <td><img src="{{ asset('imgEvent/')~ evenement.image }}"
+                                     alt="" style="width: 80px;height:80px " >
+                            </td>
+                            <td>{{ evenement.tarif }}</td>
+                            <td>{{ evenement.capacite }}</td>
+                            <td><a style="font-weight:bold;color: #0056b3;">{{ evenement.nbReservation }}</a></td>
+                            <td>{{ evenement.etat }}</td>
+                            <td><a class="btn btn-secondary btn-circle btn-lg"   href="{{ path('detailReservationEvent', {'id': evenement.getId()}) }}"><i class="fas fa-plus"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="13">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div></div></div>
+
+    <a class="btn btn-primary btn-icon-split" href="{{ path('evenement_new') }}">
+    <span class="icon text-white-50">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+        <span class="text">Ajouter un évènement</span>
+    </a>
+{% endblock %}

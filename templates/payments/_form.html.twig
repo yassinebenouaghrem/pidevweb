@@ -1,0 +1,27 @@
+{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+    <div class="form-group">
+        {{ form_label(form.idPanier, "Numero du panier ") }}
+        {{ form_errors(form.idPanier) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.idPanier, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.prixF, "Totale en DNT ") }}
+        {{ form_errors(form.prixF) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.prixF, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.modePayment, "Mode de payement ") }}
+        {{ form_errors(form.modePayment) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.modePayment, {'attr':{'class':'form-control col-sm-6'}}) }}
+    </div>
+    <div>
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    </div>
+
+{{ form_end(form) }}

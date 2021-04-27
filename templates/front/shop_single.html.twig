@@ -1,0 +1,99 @@
+{% extends 'baseFrontShop.html.twig' %}
+
+
+
+{% block container %}
+    <div class="col-md-12 mb-0"><a href="{{ path('afficherproduits_index') }}">Home</a> <span class="mx-2 mb-0">/</span> <a
+                href="{{ path('afficherproduits_index') }}">Store</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">{{ produit.nom }}</strong></div>
+
+    {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+
+    <div class="row">
+        <div class="col-md-5 mr-auto">
+            <div class="border text-center">
+                <img src="{{ asset('FrontShop/images/')~produit.getImage()}}" alt="Image" class="img-fluid p-5">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-black">{{ produit.nom }}</h2>
+
+
+            <p><strong class="text-primary h4">{{ produit.prix }} DNT</strong></p>
+
+
+            <div class="mb-5">
+                <div class="input-group mb-3" style="max-width: 220px;">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                    </div>
+                    {{ form_widget(form.quantitee, {'attr':{'class':'form-control text-center'}}) }}
+
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                    </div>
+
+                </div>
+
+            </div>
+            {% if app.session.get('email')  !='' %}
+                <p><button id="{{ form.Ajouter.vars.id }}" class="buy-now btn btn-sm height-auto px-4 py-3 btn-primary">Ajouter au panier</button></p>
+                {% do form.Ajouter.setRendered %}
+                {% do form.idPanier.setRendered %}
+                {% do form.idProduit.setRendered %}
+                {% do form.prixU.setRendered %}
+
+            {% endif %}
+
+
+
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block script %}
+
+    <script src="{{ asset('FrontShop/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('FrontShop/js/jquery-ui.js') }}"></script>
+    <script src="{{ asset('FrontShop/js/popper.min.js') }}"></script>
+    <script src="{{ asset('FrontShop/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('FrontShop/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('FrontShop/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('FrontShop/js/aos.js') }}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function(){
+            $("#{{ form.quantitee.vars.id }}").val(1);
+
+            $(".js-btn-minus").click(function(){
+
+                if($("#{{ form.quantitee.vars.id }}").val() > 0){
+                    $("#{{ form.quantitee.vars.id }}").val(parseInt($("#{{ form.quantitee.vars.id }}").val()) - 1);
+                }
+                else{
+                    $("#{{ form.quantitee.vars.id }}").val(0);
+                }
+
+
+            });
+
+            $(".js-btn-plus").click(function(){
+
+                if($("#{{ form.quantitee.vars.id }}").val() < {{ produit.quantitee }}){
+                    $("#{{ form.quantitee.vars.id }}").val(parseInt($("#{{ form.quantitee.vars.id }}").val()) + 1);
+                }
+                else{
+                    $("#{{ form.quantitee.vars.id }}").val({{ produit.quantitee }});
+                }
+
+            });
+
+
+        });
+
+
+    </script>
+{% endblock %}
+

@@ -1,0 +1,68 @@
+{% extends 'baseFrontShop.html.twig' %}
+
+
+
+{% block container %}
+    <div class="col-md-12 mb-0">
+        <a href="{{ path('afficherproduits_index') }}">Home</a> <span class="mx-2 mb-0">/</span>
+        <strong class="text-black">Checkout</strong>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+
+
+            <div class="row mb-5">
+                <div class="col-md-12">
+                    <h2 class="h3 mb-3 text-black">Votre commande</h2>
+                    <div class="p-3 p-lg-5 border">
+                        <table class="table site-block-order-table mb-5">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                            {% for commande in commandes %}
+                                <tr>
+                                    <td>{{ commande.prixU }} <strong class="mx-2">x</strong> {{ commande.quantitee }}</td>
+                                    <td>{{ commande.prixU * commande.quantitee }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+                                <td class="text-black font-weight-bold"><strong>{{ totale }}</strong></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+
+                        <div class="border mb-3">
+                            <h3 class="h6 mb-0"><a class="d-block" data-toggle="collapse" href="#collapsecheque" role="button"
+                                                   aria-expanded="false" aria-controls="collapsecheque">A la livraison</a></h3>
+
+
+                        </div>
+
+                        <div class="border mb-5">
+                            <h3 class="h6 mb-0"><a class="d-block" data-toggle="collapse" href="#collapsepaypal" role="button"
+                                                   aria-expanded="false" aria-controls="collapsepaypal">Paypal</a></h3>
+
+
+                        </div>
+
+                        <div class="form-group">
+                            <a class="btn btn-primary btn-lg btn-block" href="{{ path('thankyou', {'idPanier' : idPanier}) }}">Place
+                                Order</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- </form> -->
+
+{% endblock %}

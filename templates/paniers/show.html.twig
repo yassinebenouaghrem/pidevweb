@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paniers{% endblock %}
+
+{% block body %}
+    <h1>Paniers</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdPanier</th>
+                <td>{{ panier.getIdPanier() }}</td>
+            </tr>
+            <tr>
+                <th>Cin</th>
+                <td>{{ panier.getCin() }}</td>
+            </tr>
+            <tr>
+                <th>DateC</th>
+                <td>{{ panier.getDateC() ? panier.getDateC()|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateU</th>
+                <td>{{ panier.getDateU() ? panier.getDateU()|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>StatusPanier</th>
+                <td>{{ panier.getStatusPanier() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('paniers_index') }}">back to list</a>
+
+    <a href="{{ path('paniers_edit', {'idPanier': panier.getIdPanier()}) }}">edit</a>
+
+    {{ include('paniers/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'frontbase.html.twig' %}
+{% block imageAccueil %}
+    <section class="hero-wrap js-fullheight" style="background-image: url('{{ asset('Front/images/imageres.webp') }}');" data-section="home" data-stellar-background-ratio="0.5">
+
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start" data-scrollax-parent="true">
+                <div class="col-md-6 pt-5 ftco-animate">
+                    <div class="mt-5">
+                        <h1 class="mb-4">Mes rendez vous</h1>
+                        <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%  endblock %}
+{% block body %}
+    <section class="ftco-section" id="doctor-section">
+        <div class="container-fluid px-5">
+            <div class="row justify-content-center mb-5 pb-2">
+                <div class="col-md-8 text-center heading-section ftco-animate">
+                    <h2 class="mb-4">Vos Rèservations</h2>
+
+                </div>
+                <a href="{{ path('pdf')}}"><img src="https://i.ibb.co/bbmMq2M/pdf.png" style = "width: 120px ; height:120px" alt="pdf" border="0" align="right"></a>
+
+            </div>
+            <div class="meta mb-3">
+
+                <a href="{{ path('trires_affichage') }}" class="btn btn-secondary py-3 px-4">Tri par date</a></p>
+
+            </div>
+            <div class="row">
+                {% for reservation in reservations %}
+
+                    <div class="col-md-6 col-lg-3 ftco-animate">
+                        <div class="staff">
+                            <div class="text pt-3 text-center">
+
+                                {% for k in users %}
+
+                                    {% if k.getId()==reservation.getCintherapeute() %}
+                                        <h3 style="color:purple" >  Dr {{ k.getNom }} {{ k.prenom }}</h3>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="img-wrap d-flex align-items-stretch">
+                                <img src="{{ asset('uploads/images/' ~ reservation.getImage()) }}"
+                                     alt = "" style = "width: 300px ; height:300px">
+
+                            </div>
+                            <div class="text pt-3 text-center">
+
+                                <div class="meta mb-3">
+                                    <div><a href="#">{{ (reservation.getHeure()|trim('00', 'right'))|trim(':','right') }} - {{ (reservation.getHeurefin()|trim('00', 'right'))|trim(':','right') }}</a></div>
+
+                                </div>
+                                <h3 class="mb-2">{{ reservation.getDate() ? reservation.date|date('Y-m-d') : '' }}</h3>
+
+                                <div class="faded">
+                                    {% if ( reservation.getDate() >  date('-1day')) %}
+
+                                        <p>{{ reservation.getType() }}</p>
+                                        {% if reservation.getEtat()=="Confirmé" %}
+                                            <span style="color: #4BB543  " class="position mb-2">{{ reservation.getEtat() }}</span>
+                                        {% else %}
+                                            <span style="color: #ffcc00  " class="position mb-2">{{ reservation.getEtat() }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                    <ul class="ftco-social text-center">
+                                        <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                                        <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                                        <li class="ftco-animate"><a href="#"><span class="icon-google-plus"></span></a></li>
+                                        <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                                    </ul>
+                                    {% if ( reservation.getDate() > date('-1day')) %}
+
+                                        <a class="btn btn-info btn-icon-split" href="{{ path('reservation_edit', {'idreservation': reservation.getIdreservation}) }}">Modifier</a>
+                                    {% elseif  reservation.getEtat()=="Confirmé" %}
+                                        <span style="color: #4BB543  " class="position mb-2">Effectué!</span>
+                                    {% else  %}
+                                        <span style="color: #ffcc00  " class="position mb-2">Expiré</span>
+
+                                    {% endif %}
+                                    {{ include('reservation/deletefront.html.twig') }}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
+                {% endfor %}
+            </div>
+
+
+        </div>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#myInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#hi tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>
+
+        <div>
+            {{ knp_pagination_render (reservations) }}
+        </div>
+
+    </section>
+{% endblock %}

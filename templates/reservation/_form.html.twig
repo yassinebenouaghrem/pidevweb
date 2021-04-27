@@ -1,0 +1,34 @@
+{{ form_start(form) }}
+
+
+
+<div>
+
+
+
+    <div class="form-group">
+        {{ form_label(form.type, "Type ") }}
+
+    </div>
+    <div class="form-group">
+        <div class="form-field">
+        {{ form_widget(form.type) }}
+        </div>
+    </div>
+    <div class="">
+
+
+
+    <div>
+        <div class="form-group">
+            {{ form_label(form.message, "Raison de reservation ") }}
+
+        </div>
+        <div class="form-group">
+
+            {{ form_widget(form.message, {'attr':{'class':'form-control' }}) }}
+        </div>
+        <button class="btn btn-success">{{ button_label|default('Reserver') }}</button>
+    </div>
+
+{{ form_end(form) }}

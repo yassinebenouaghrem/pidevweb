@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+    <h1>Commandes</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdCommande</th>
+                <td>{{ commande.getIdCommande() }}</td>
+            </tr>
+            <tr>
+                <th>IdPanier</th>
+                <td>{{ commande.getIdPanier() }}</td>
+            </tr>
+            <tr>
+                <th>IdProduit</th>
+                <td>{{ commande.getIdProduit() }}</td>
+            </tr>
+            <tr>
+                <th>Quantitee</th>
+                <td>{{ commande.getQuantitee() }}</td>
+            </tr>
+            <tr>
+                <th>PrixU</th>
+                <td>{{ commande.getPrixU() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('commandes_index') }}">back to list</a>
+
+    <a href="{{ path('commandes_edit', {'idCommande': commande.getIdCommande()}) }}">edit</a>
+
+    {{ include('commandes/_delete_form.html.twig') }}
+{% endblock %}

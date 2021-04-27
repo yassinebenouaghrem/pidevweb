@@ -1,0 +1,9 @@
+<form method="post" action="{{ path('reservation_deletefront', {'idreservation': reservation.getIdreservation()}) }}" onsubmit="return confirm('Voulez vous vraiment annuler cette reservations?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.getIdreservation()) }}">
+    <span class="icon text-white-50">
+
+    <button class="btn btn-danger btn-icon-split">Annuler cette reservation</button>
+                                                </span>
+
+
+</form>

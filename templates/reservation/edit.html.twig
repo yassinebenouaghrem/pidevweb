@@ -1,0 +1,29 @@
+{% extends 'frontbase.html.twig' %}
+
+{% block title %}Edit Reservation{% endblock %}
+
+{% block body %}
+
+    <<section class="ftco-section ftco-no-pt ftco-no-pb ftco-services-2 bg-light">
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start" data-scrollax-parent="true">
+            <div class="col-md-6 pt-5 ftco-animate">
+                <div class="py-lg-5">
+                    <div class="row justify-content-center pb-5">
+                        <div class="col-md-12 heading-section ftco-animate">
+                            <img src="{{ asset('uploads/images/' ~ reservation.getImage()) }}"
+                                 alt = "" style = "width: 450px ; height:450px">                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-5 d-flex">
+                <div class="appointment-wrap bg-white p-4 p-md-5 d-flex align-items-center">
+                    {{ include('reservation/_form.html.twig') }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{%  endblock %}

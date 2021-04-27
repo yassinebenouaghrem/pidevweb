@@ -1,0 +1,82 @@
+{% extends 'frontbase.html.twig' %}
+{% block body %}
+<section class="ftco-section" id="doctor-section">
+    <div class="container-fluid px-5">
+        <div class="row justify-content-center mb-5 pb-2">
+            <div class="col-md-8 text-center heading-section ftco-animate">
+                <h2 class="mb-4">Nos offres de consultations</h2>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-md-6 col-lg-3 ftco-animate">
+                <div class="staff">
+                    <div class="text pt-3 text-center">
+                        {% if ( consultation.getDate() > date('-1day')) %}
+
+                            {% if consultation.getEtat() == "Disponible" %}
+                                <h3 style="color:#00ff00" >  {{ consultation.getEtat() }}</h3>
+                            {% endif %}
+
+                            {% if consultation.getEtat() == "Reservé" %}
+
+                                <h3 style="color:#ff0000" >  {{ consultation.getEtat() }}</h3>
+                            {% endif %}
+                        {% else %}
+                            <h3 style="color:#ff0000" >  Expiré </h3>
+                        {% endif %}
+
+                    </div>
+                    <div class="img-wrap d-flex align-items-stretch">
+                        <img src="{{ asset('uploads/images/' ~ consultation.getImage()) }}"
+                             alt = "" style = "width: 300px ; height:300px">
+
+                    </div>
+                    <div class="text pt-3 text-center">
+                        <div class="meta mb-3">
+                            <div><a href="#">{{ consultation.getDate() ? consultation.date|date('Y-m-d') : '' }}</a></div>
+                        </div>
+                        <span class="position mb-2">{{ consultation.getHeuredeb()|trim(':.00', 'right') }} - {{ consultation.getHeurefin()|trim(':.00', 'right') }}</span>
+
+                        <span class="position mb-2">{{ consultation.getTitre() }}</span>
+                        <div class="faded">
+                            <p>{{ consultation.getDescription() }}</p>
+                            <h3 class="mb-2">{{ consultation.getEmplacement() }}</h3>
+                            <ul class="ftco-social text-center">
+                                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                                <li class="ftco-animate"><a href="#"><span class="icon-google-plus"></span></a></li>
+                                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                            </ul>
+                            {% if consultation.getEtat() == "Disponible" and  ( consultation.getDate() > date('-1day')) %}
+                                <p><a href="{{ path('reservation_new', {'consultation': consultation.id}) }}" class="btn btn-primary">Reserver</a></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#hi tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+
+
+
+{% endblock %}

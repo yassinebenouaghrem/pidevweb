@@ -1,0 +1,60 @@
+{% extends 'frontbase.html.twig' %}
+
+{% block imageAccueil %}
+    <section class="hero-wrap js-fullheight" style="background-image: url('{{ asset('Front/images/bg_yoga2.jpg') }}');" data-section="home" data-stellar-background-ratio="0.5">
+
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start" data-scrollax-parent="true">
+                <div class="col-md-6 pt-5 ftco-animate">
+                    <div class="mt-5">
+                        <h1 class="mb-4">Nos produits </h1>
+                        <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{%  endblock %}
+{% block body %}
+    <div class="col-md-12 mb-0"><a href="{{ path('afficherproduits_index') }}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Store</strong></div>
+
+    <div class="row">
+        {% for produit in produits %}
+
+        <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
+
+
+
+            <a href="{{ path('shop_single', {'idProduit' : produit.idProduit})}}"> <img src="{{ asset('FrontShop/images/')~produit.getImage()}}" width=150 height=250 alt="Image"></a>
+
+            <h3 class="text-dark"><a href="{{ path('shop_single', {'idProduit' : produit.idProduit}) }}">{{produit.Nom}}</a></h3>
+
+            <p class="price">{{ produit.prix }} DNT</p>
+
+            {% for promotions in promotions %}
+
+                {% if (promotions.idP == produit.idProduit) and (promotions.dateF > date())   %}
+                    {% set difference = (promotions.dateF).diff(date()) %}
+                    {% set leftDays = difference.days %}
+
+                    <span class="onsale">Encore {{leftDays}} jours </span>
+
+            <p class="price"><del>{{produit.Prix}} DNT</del> : promotion de {{promotions.valP}}%  <br> {{(produit.Prix/100)*promotions.valP}} DNT <br/> </p>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+
+
+
+    </div>
+
+
+    <div class="pagination">
+        {{ knp_pagination_render(produits) }}
+    </div>
+{% endblock %}
+
