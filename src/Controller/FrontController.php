@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twilio\Rest\Client;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class FrontController extends AbstractController
 {
@@ -125,6 +126,29 @@ class FrontController extends AbstractController
         ]);
 
     }
+    
+    /**
+     * @Route("/front/cartJSON", name="cartJSON", methods={"GET"})
+     */
+    public function cartJSON(NormalizerInterface  $Normalizer): Response
+    {
+        $session=$request->getSession();
+        $a=$session->get("email");
+        $user2=$this->getDoctrine()->getRepository(\App\Entity\User::class)->findOneBy(
+            ['email' => $a],
+        );
+        $idPanier = 0;
+        foreach($this->verifPanier($user2->getCin()) as $key => $value)
+        {
+            $idPanier = $value->getIdPanier();
+        }
+
+        $commandes = $this->Afficher_Commande($idPanier);
+
+        $jsonContent = $Normalizer->normalize($commandes,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+
+    }
 
     /**
      * @Route("/{idProduit}{quant}/front/cart", name="addcart", methods={"GET"})
@@ -163,6 +187,96 @@ class FrontController extends AbstractController
         return $this->render('front/cart.html.twig',[
             'commandes'=>$commandes,
         ]);
+
+    }
+    
+    /**
+     * @Route("/front/updateJSON/update", name="updateJSON", methods={"GET"})
+     */
+    public function updateJSON(Request $request, NormalizerInterface  $Normalizer): Response
+    {
+        $newQuantitee = $request->get("Quant");
+        $id = $request->get("idCommande");
+
+        $commande = $this->getCommande($id);
+
+        $commande->setQuantitee($newQuantitee);
+
+
+        $this->modifierCommande($commande);
+
+        $jsonContent = $Normalizer->normalize($commande,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+
+    }
+    
+    /**
+     * @Route("/front/deleteJSON/delete", name="deleteJSON", methods={"GET"})
+     */
+    public function deleteJSON(Request $request, NormalizerInterface  $Normalizer): Response
+    {
+        $id = $request->get("idCommande");
+        $this->supprimerCommande($id);
+
+        $session=$request->getSession();
+        $a=$session->get("email");
+        $user2=$this->getDoctrine()->getRepository(\App\Entity\User::class)->findOneBy(
+            ['email' => $a],
+        );
+        $idPanier = 0;
+        foreach($this->verifPanier($user2->getCin()) as $key => $value)
+        {
+            $idPanier = $value->getIdPanier();
+        }
+        
+        $commandes = $this->Afficher_Commande($idPanier);
+
+        $jsonContent = $Normalizer->normalize($commandes,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+
+    }
+    
+    /**
+     * @Route("/front/PaiementJSON/add", name="PaiementJSON", methods={"POST","GET"})
+     */
+    public function PaiementJSON(NormalizerInterface  $Normalizer,Request $request): Response
+    {
+
+        $mode = $request->get("ModePay");
+
+        $session=$request->getSession();
+        $a=$session->get("email");
+        $user2=$this->getDoctrine()->getRepository(\App\Entity\User::class)->findOneBy(
+            ['email' => $a],
+        );
+        $idPanier = 0;
+        foreach($this->verifPanier($user2->getCin()) as $key => $value)
+        {
+            $idPanier = $value->getIdPanier();
+        }
+
+        $payment = new Payments();
+
+        $payment->setIdPanier($idPanier);
+        $payment->setPrixF($this->calcueTotale($idPanier));
+        $payment->setModePayment($mode);
+
+        $this->modifierQuantiter($idPanier);
+
+
+        $this->ajouterPayment($payment);
+
+
+
+
+        $this->modifierPanier($idPanier);
+
+
+        $msg = "Votre commande n°".$idPanier." a été enregistrer avec succées, vous la receverez dans les prochains délais.\n\nZenlife";
+        $this->SMS('+13392040620','+21652836953',$msg);
+
+        $jsonContent = $Normalizer->normalize($payment,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
 
     }
 
