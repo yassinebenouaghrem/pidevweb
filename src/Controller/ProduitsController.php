@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 /**
  * @Route("/produits")
  */
@@ -46,6 +47,60 @@ class ProduitsController extends AbstractController
         return $this->render('produits/index.html.twig', [
             'produits' => $produits,
         ]);
+    }
+    
+    /**
+     * @Route("/shopJSON/add", name="shopJSON", methods={"POST","GET"})
+     */
+    public function shopJSON(Request $request, NormalizerInterface  $Normalizer): Response
+    {
+
+
+        $commande = new Commandes();
+
+
+        $id = $request->get("idProduit");
+        $quant = $request->get("Quant");
+        $prix = $request->get("Prix");
+        
+        $session=$request->getSession();
+        $a=$session->get("email");
+        $user2=$this->getDoctrine()->getRepository(\App\Entity\User::class)->findOneBy(
+            ['email' => $a],
+        );
+
+        if(empty($this->verifPanier($user2->getCin())))
+            {
+                $panier = new Paniers();
+                $panier->setCin($user2->getCin());
+                $panier->setStatusPanier('En cours');
+
+                $this->ajouterPanier($panier);
+
+                foreach($this->verifPanier($user2->getCin()) as $key => $value)
+                {
+                    $commande->setIdPanier($value->getIdPanier());
+                    $commande->setIdProduit($produit->getIdProduit());
+                    $commande->setPrixU($produit->getPrix());
+                }
+
+
+
+                $this->ajouterCommande($commande);
+            }else{
+                foreach($this->verifPanier($user2->getCin()) as $key => $value)
+                {
+                    $commande->setIdPanier($value->getIdPanier());
+                    $commande->setIdProduit($produit->getIdProduit());
+                    $commande->setPrixU($produit->getPrix());
+                }
+                $this->ajouterCommande($commande);
+            }
+
+        $jsonContent = $Normalizer->normalize($commande,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+
+
     }
 
     /**
@@ -152,9 +207,41 @@ class ProduitsController extends AbstractController
             "Attachment" => true
         ]);
     }
+    
 
 
+    /**
+     * @Route("/AllProduits", name="AllProduits")
+     */
+    public function AllProduits(NormalizerInterface  $Normalizer): Response
+    {
+        $donnees = $this->getDoctrine()
+            ->getRepository(Produits::class)
+            ->findAll();
 
+
+        $promotions = $this->getDoctrine()
+            ->getRepository(Promotion::class)
+            ->findAll();
+
+        $jsonContent = $Normalizer->normalize($donnees,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @Route("/AllPromos", name="AllPromos")
+     */
+    public function AllPromos(NormalizerInterface  $Normalizer): Response
+    {
+
+
+        $promotions = $this->getDoctrine()
+            ->getRepository(Promotion::class)
+            ->findAll();
+
+        $jsonContent = $Normalizer->normalize($promotions,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
 
 
     /**
