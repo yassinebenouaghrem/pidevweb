@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Promotion
@@ -18,6 +19,7 @@ class Promotion
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups("post:read")
      */
     private $id;
 
@@ -25,6 +27,7 @@ class Promotion
      * @var int
      *
      * @ORM\Column(name="idP", type="integer", nullable=false)
+     * @Groups("post:read")
      */
     private $idp;
 
@@ -32,6 +35,7 @@ class Promotion
      * @var int
      *
      * @ORM\Column(name="valP", type="integer", nullable=false)
+     * @Groups("post:read")
      */
     private $valp;
 
@@ -39,6 +43,7 @@ class Promotion
      * @var \DateTime
      *
      * @ORM\Column(name="dateD", type="date", nullable=false)
+     * @Groups("post:read")
      */
     private $dated;
 
@@ -46,6 +51,7 @@ class Promotion
      * @var \DateTime
      *
      * @ORM\Column(name="dateF", type="date", nullable=false)
+     * @Groups("post:read")
      */
     private $datef;
 

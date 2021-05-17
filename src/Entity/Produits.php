@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Produits
@@ -18,6 +19,7 @@ class Produits
      * @ORM\Column(name="ID_Produit", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups("post:read")
      */
     private $idProduit;
 
@@ -25,6 +27,7 @@ class Produits
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=20, nullable=false)
+     * @Groups("post:read")
      */
     private $nom;
 
@@ -32,6 +35,7 @@ class Produits
      * @var int
      *
      * @ORM\Column(name="Quantitee", type="integer", nullable=false)
+     * @Groups("post:read")
      */
     private $quantitee;
 
@@ -39,6 +43,7 @@ class Produits
      * @var string|null
      *
      * @ORM\Column(name="Type", type="string", length=225, nullable=true)
+     * @Groups("post:read")
      */
     private $type;
 
@@ -46,6 +51,7 @@ class Produits
      * @var string|null
      *
      * @ORM\Column(name="Image", type="string", length=225, nullable=true)
+     * @Groups("post:read")
      */
     private $image;
 
@@ -53,6 +59,7 @@ class Produits
      * @var float
      *
      * @ORM\Column(name="Prix", type="float", precision=10, scale=0, nullable=false)
+     * @Groups("post:read")
      */
     private $prix;
 

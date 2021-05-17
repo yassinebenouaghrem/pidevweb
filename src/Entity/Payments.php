@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Payments
@@ -19,6 +20,7 @@ class Payments
      * @ORM\Column(name="ID_Payment", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups("post:read")
      */
     private $idPayment;
 
@@ -27,6 +29,7 @@ class Payments
      *
      * @ORM\Column(name="ID_Panier", type="integer", nullable=true)
      * @Assert\NotBlank (message="Ce champ est obligatoire")
+     * @Groups("post:read")
      */
     private $idPanier;
 
@@ -35,6 +38,7 @@ class Payments
      *
      * @ORM\Column(name="Prix_F", type="float", precision=10, scale=0, nullable=true)
      * @Assert\NotBlank (message="Ce champ est obligatoire")
+     * @Groups("post:read")
      */
     private $prixF;
 
@@ -43,6 +47,7 @@ class Payments
      *
      * @ORM\Column(name="Mode_payment", type="string", length=10, nullable=true)
      * @Assert\NotBlank (message="Ce champ est obligatoire")
+     * @Groups("post:read")
      */
     private $modePayment;
 
