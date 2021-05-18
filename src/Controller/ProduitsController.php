@@ -208,6 +208,26 @@ class ProduitsController extends AbstractController
         ]);
     }
     
+    
+    /**
+     * @Route("/afficherproduitsJSON", name="afficherproduitsJSON", methods={"GET"})
+     */
+    public function afficherproduitsJSON(Request $request, PaginatorInterface $paginator, NormalizerInterface  $Normalizer): Response
+    {
+        $donnees = $this->getDoctrine()
+            ->getRepository(Produits::class)
+            ->findAll();
+        $produits = $paginator->paginate(
+            $donnees, // Requête contenant les données à paginer (ici nos articles)
+            $request->query->getInt(
+                'page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
+            3 // Nombre de résultats par page
+        );
+
+
+        $jsonContent = $Normalizer->normalize($produits,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
 
 
     /**
